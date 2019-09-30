@@ -23,6 +23,18 @@ for header in elf_file.program_header_table.entries:
 
 More complete examples can be found in the programs in the `scripts` folder.
 
+# Test Binaries
+
+The test binaries included in this repo are from Muppetlabs' "tiny" series, as well as netspooky's "golfclub" programs:
+
+ - https://www.muppetlabs.com/~breadbox/software/tiny/return42.html
+ - https://www.muppetlabs.com/~breadbox/software/tiny/useless.html
+ - https://www.muppetlabs.com/~breadbox/software/tiny/useful.html
+
+ - https://github.com/netspooky/golfclub
+
+
+
 ### TODO
  - The binary recomposition feature is experimental. It appears to work for the very simple, very small binaries,
 but modifies the behavior or corrupts the logic of larger or more complex programs. Further investigation is
