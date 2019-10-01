@@ -79,10 +79,10 @@ if __name__=="__main__":
     main()
 ```
 
-![Ghidra loads the binary after the ELF header is repaired](https://imgur.com/hKFWf96)
+![Ghidra loads the binary after the ELF header is repaired](https://imgur.com/hKFWf96.png)
 
 
-More complete examples can be found in the programs in the `scripts` folder.
+More examples can be found in the programs in the `scripts` folder.
 
 # Test Binaries
 
