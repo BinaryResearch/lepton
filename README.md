@@ -32,7 +32,8 @@ Example use cases:
 
 One anti-analysis trick involving corrupting the ELF header is writing incorrect values to fields having to do with section information.
 Some tools will subsequently fail to parse or load the binary. A concrete example of this is a ["keygenme" crackme from 
-crackmes.one](https://crackmes.one/crackme/5d7c66d833c5d46f00e2c45b) that Ghidra (9.1-BETA_DEV_20190923) fails to load.
+crackmes.one](https://crackmes.one/crackme/5d7c66d833c5d46f00e2c45b) that Ghidra (9.1-BETA_DEV_20190923) fails to load. The crackme file
+is included with this repository, in the `test_binaries` folder.
 
 ![Ghidra fails to correctly parse ELF header](https://imgur.com/PLZkF2v.png)
 
@@ -65,7 +66,8 @@ readelf: Error: Reading 4194240 bytes extends past end of file for section heade
 readelf: Error: Reading 14312 bytes extends past end of file for dynamic string table
 ```
 
-These values can be overwritten such that Ghidra successfully loads the binary.
+These values can be overwritten such that Ghidra successfully imports the binary. In the script below,
+all fields having to do with sections are zeroed out:
 
 ```python
 #!/usr/bin/python3
@@ -93,7 +95,7 @@ if __name__=="__main__":
     main()
 ```
 
-Ghidra now successfully imports the binary. The new ELF header values are displayed in Ghidra as well:
+Ghidra now successfully imports the binary and displays the new ELF header values as well:
 
 ![Ghidra loads the binary after the ELF header is repaired](https://imgur.com/hKFWf96.png)
 
