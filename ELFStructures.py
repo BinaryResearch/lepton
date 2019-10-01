@@ -49,8 +49,8 @@ ELF32_program_header = {"p_type":   bytearray(4),
                         "p_align":  bytearray(4)}
 
 
-# [ cpu_name, EI_CLASS, EI_DATA ]
-# the e_machine field is used to retrieve the architecture
+# [ e_machine byte string, EI_CLASS, EI_DATA ]
+# the e_machine field is used to retrieve architecture-specific information
 architectures = { b'\x03\x00':['i386', 1, 1],
                   b'>\x00':['AMD64', 2, 1] }
 

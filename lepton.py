@@ -65,7 +65,7 @@ class ELFFile:
         new_entry_point_offset = unpack('<H', self.ELF_header.fields["e_ehsize"])[0] + len(program_header_table_bytes)
         new_entry_point = new_entry_point_offset + unpack(format, self.program_header_table.entries[0]["p_vaddr"])[0]
         self.ELF_header.fields["e_entry"] = pack(format, new_entry_point)
-        binary = ELF_header_bytes + program_header_table_bytes + segment
+        binary = self.ELF_header.to_bytes() + program_header_table_bytes + segment
 
         return binary
 
@@ -200,37 +200,43 @@ class ELFFile:
 
         def print_fields(self):
             if len(self.fields["e_entry"]) == 8:
-                print("\tE_IDENT: " + str(unpack("<BBBBBBBBBBBBBBBB", self.fields["e_ident"])))
-                print("\tType: 0x%x" % unpack('<h', self.fields["e_type"])[0])
-                print("\tMachine: 0x%x" % unpack('<h', self.fields["e_machine"])[0])
-                print("\tVersion: 0x%x" % unpack('<I', self.fields["e_version"])[0])
-                print("\tEntry point: 0x%x" % unpack('<Q', self.fields["e_entry"])[0])
-                print("\tProgram header table offset (bytes into file): 0x%x" % unpack('<Q', self.fields["e_phoff"])[0])
-                print("\tSection header table offset (bytes into file): 0x%x" % unpack('<Q', self.fields["e_shoff"])[0])
-                print("\tFlags: 0x%x" % unpack('<I', self.fields["e_flags"])[0])
-                print("\tELF header size (bytes): %d" % unpack('<h', self.fields["e_ehsize"])[0])
-                print("\tProgram header table entry size: %d" % unpack('<h', self.fields["e_phentsize"])[0])
-                print("\tNumber of entries in the program header table: %d" % unpack('<h', self.fields["e_phnum"])[0])
-                print("\tSection header table entry size: %d" % unpack('<h', self.fields["e_shentsize"])[0])
-                print("\tNumber of entries in the section header table: %d" % unpack('<h', self.fields["e_shnum"])[0])
-                print("\tNumber of entries in the string header index table: %d" % unpack('<h', self.fields["e_shstrndx"])[0])
+                try:
+                    print("\tE_IDENT: " + str(unpack("<BBBBBBBBBBBBBBBB", self.fields["e_ident"])))
+                    print("\tType: 0x%x" % unpack('<h', self.fields["e_type"])[0])
+                    print("\tMachine: 0x%x" % unpack('<h', self.fields["e_machine"])[0])
+                    print("\tVersion: 0x%x" % unpack('<I', self.fields["e_version"])[0])
+                    print("\tEntry point: 0x%x" % unpack('<Q', self.fields["e_entry"])[0])
+                    print("\tProgram header table offset (bytes into file): 0x%x" % unpack('<Q', self.fields["e_phoff"])[0])
+                    print("\tSection header table offset (bytes into file): 0x%x" % unpack('<Q', self.fields["e_shoff"])[0])
+                    print("\tFlags: 0x%x" % unpack('<I', self.fields["e_flags"])[0])
+                    print("\tELF header size (bytes): %d" % unpack('<h', self.fields["e_ehsize"])[0])
+                    print("\tProgram header table entry size: %d" % unpack('<h', self.fields["e_phentsize"])[0])
+                    print("\tNumber of entries in the program header table: %d" % unpack('<h', self.fields["e_phnum"])[0])
+                    print("\tSection header table entry size: %d" % unpack('<h', self.fields["e_shentsize"])[0])
+                    print("\tNumber of entries in the section header table: %d" % unpack('<h', self.fields["e_shnum"])[0])
+                    print("\tNumber of entries in the string header index table: %d" % unpack('<h', self.fields["e_shstrndx"])[0])
+                except:
+                    print("\t[+] Null field encountered. File is smaller than expected header size [+]")
+                    pass
             else:
-                print("\tE_IDENT: " + str(unpack("<BBBBBBBBBBBBBBBB", self.fields["e_ident"])))
-                print("\tType: 0x%x" % unpack('<h', self.fields["e_type"])[0])
-                print("\tMachine: 0x%x" % unpack('<h', self.fields["e_machine"])[0])
-                print("\tVersion: 0x%x" % unpack('<I', self.fields["e_version"])[0])
-                print("\tEntry point: 0x%x" % unpack('<I', self.fields["e_entry"])[0])
-                print("\tProgram header table offset (bytes into file): 0x%x" % unpack('<I', self.fields["e_phoff"])[0])
-                print("\tSection header table offset (bytes into file): 0x%x" % unpack('<I', self.fields["e_shoff"])[0])
-                print("\tFlags: 0x%x" % unpack('<I', self.fields["e_flags"])[0])
-                print("\tELF header size (bytes): %d" % unpack('<h', self.fields["e_ehsize"])[0])
-                print("\tProgram header table entry size: %d" % unpack('<h', self.fields["e_phentsize"])[0])
-                print("\tNumber of entries in the program header table: %d" % unpack('<h', self.fields["e_phnum"])[0])
-                print("\tSection header table entry size: %d" % unpack('<h', self.fields["e_shentsize"])[0])
-                print("\tNumber of entries in the section header table: %d" % unpack('<h', self.fields["e_shnum"])[0])
-                print("\tNumber of entries in the string header index table: %d" % unpack('<h', self.fields["e_shstrndx"])[0])
-
-
+                try:
+                    print("\tE_IDENT: " + str(unpack("<BBBBBBBBBBBBBBBB", self.fields["e_ident"])))
+                    print("\tType: 0x%x" % unpack('<h', self.fields["e_type"])[0])
+                    print("\tMachine: 0x%x" % unpack('<h', self.fields["e_machine"])[0])
+                    print("\tVersion: 0x%x" % unpack('<I', self.fields["e_version"])[0])
+                    print("\tEntry point: 0x%x" % unpack('<I', self.fields["e_entry"])[0])
+                    print("\tProgram header table offset (bytes into file): 0x%x" % unpack('<I', self.fields["e_phoff"])[0])
+                    print("\tSection header table offset (bytes into file): 0x%x" % unpack('<I', self.fields["e_shoff"])[0])
+                    print("\tFlags: 0x%x" % unpack('<I', self.fields["e_flags"])[0])
+                    print("\tELF header size (bytes): %d" % unpack('<h', self.fields["e_ehsize"])[0])
+                    print("\tProgram header table entry size: %d" % unpack('<h', self.fields["e_phentsize"])[0])
+                    print("\tNumber of entries in the program header table: %d" % unpack('<h', self.fields["e_phnum"])[0])
+                    print("\tSection header table entry size: %d" % unpack('<h', self.fields["e_shentsize"])[0])
+                    print("\tNumber of entries in the section header table: %d" % unpack('<h', self.fields["e_shnum"])[0])
+                    print("\tNumber of entries in the string header index table: %d" % unpack('<h', self.fields["e_shstrndx"])[0])
+                except:
+                    print("\t[+] Null field encountered. File is smaller than expected header size [+]")
+                    pass
 
     class ProgramHeaderTable:
         def __init__(self, file_buffer, ELF_header_fields):

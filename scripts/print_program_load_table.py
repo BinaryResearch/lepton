@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from Lepton import *
+from lepton import *
 from struct import unpack
 from sys import argv
 
