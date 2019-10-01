@@ -5,7 +5,7 @@ or binaries that have had the ELF header deliberately mangled as an anti-analysi
 Development was prompted by the failure of other tools to parse some of the ELF binaries in
 [Muppetlabs' "tiny" ELF file series](http://www.muppetlabs.com/~breadbox/software/tiny/). 
 
-Lepton succeeds in these cases where other parsers fail for two main reasons:
+Lepton succeeds in cases where other parsers fail for two main reasons:
 
  1. When reading the ELF header and program header table, the fields are simply read without any assumptions about 
     their correctness and without additional analysis. The main exceptions are the magic bytes and the value of the `e_machine` field; if the file 
