@@ -1,21 +1,21 @@
 # Overview
-Lepton is a Lightweight ELF Parsing Tool that was designed specifically in order to analyze binaries with damaged or corrupted
+Lepton is a Lightweight ELF Parsing Tool that was designed specifically for analyzing binaries with damaged or corrupted
 ELF headers, such as extremely minimalist ELF files in which the entry point and program header table lie within the ELF header,
-or binaries that have had their header deliberately mangled as an anti-analysis method, such as crackmes or malware.
+or binaries that have had the ELF header deliberately mangled as an anti-analysis method, such as crackmes or malware.
 Development was prompted by the failure of other tools to parse some of the ELF binaries in
 [Muppetlabs' "tiny" ELF file series](http://www.muppetlabs.com/~breadbox/software/tiny/). 
 
 Lepton succeeds in these cases where other parsers fail for two main reasons:
 
-    1. When reading the ELF header and program header table, the majority of the values of the fields are simply read without any assumptions about 
-       their correctness and without additional analysis. The main exceptions are the magic bytes and the value of the `e_machine` fields; if the file 
-       being read is not an ELF file or the architecture is not supported, Lepton quits. This means that if the binary can be executed, it can also be
-       parsed by Lepton, regardless of the extent of the corruption in the ELF header.
+ 1. When reading the ELF header and program header table, the majority of the values of the fields are simply read without any assumptions about 
+    their correctness and without additional analysis. The main exceptions are the magic bytes and the value of the `e_machine` fields; if the file 
+    being read is not an ELF file or the architecture is not supported, Lepton quits. This means that if the binary can be executed, it can also be
+    parsed by Lepton, regardless of the extent of the corruption in the ELF header.
 
-    2. When reconstructing the ELF header, only the values in the fields read by the kernel when loading the binay into memory are considered correct;
-       the values of the rest of the fields are derived from the fields required by the kernel or assigned standard values. For example, the endianness 
-       and architecture of the data in the file is derived from the value in the `e_machine` field, which must be correct in order for the binary to be 
-       loaded by the kernel.  
+ 2. When reconstructing the ELF header, only the values in the fields read by the kernel when loading the binay into memory are considered correct;
+    the values of the rest of the fields are derived from the fields required by the kernel or assigned standard values. For example, the endianness 
+    and architecture of the data in the file is derived from the value in the `e_machine` field, which must be correct in order for the binary to be 
+    loaded by the kernel.  
 
 When using Lepton to parse ELF binaries, one has access to every field in the ELF header as well as every field in every entry of the
 program load table. Individual fields can be straightforwardly modified. One can easily edit these fields and then create a new binary 
@@ -92,6 +92,8 @@ def main():
 if __name__=="__main__":
     main()
 ```
+
+Ghidra now successfully imports the binary. The new ELF header values are displayed in Ghidra as well:
 
 ![Ghidra loads the binary after the ELF header is repaired](https://imgur.com/hKFWf96.png)
 
