@@ -7,10 +7,10 @@ Development was prompted by the failure of other tools to parse some of the ELF 
 
 Lepton succeeds in these cases where other parsers fail for two main reasons:
 
- 1. When reading the ELF header and program header table, the majority of the values of the fields are simply read without any assumptions about 
-    their correctness and without additional analysis. The main exceptions are the magic bytes and the value of the `e_machine` fields; if the file 
-    being read is not an ELF file or the architecture is not supported, Lepton quits. This means that if the binary can be executed, it can also be
-    parsed by Lepton, regardless of the extent of the corruption in the ELF header.
+ 1. When reading the ELF header and program header table, the fields are simply read without any assumptions about 
+    their correctness and without additional analysis. The main exceptions are the magic bytes and the value of the `e_machine` field; if the file 
+    being read is not an ELF file or the architecture is not supported, Lepton quits. The result is that that if the binary can be executed, it can also be
+    parsed correctly by Lepton, regardless of the extent of the corruption in the ELF header.
 
  2. When reconstructing the ELF header, only the values in the fields read by the kernel when loading the binay into memory are considered correct;
     the values of the rest of the fields are derived from the fields required by the kernel or assigned standard values. For example, the endianness 
