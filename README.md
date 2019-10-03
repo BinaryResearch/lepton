@@ -1,9 +1,12 @@
 # Overview
-Lepton is a Lightweight ELF Parsing Tool that was designed specifically for analyzing binaries with damaged or corrupted
+Lepton is a Lightweight ELF Parsing Tool that was designed specifically for analyzing and editing binaries with damaged or corrupted
 ELF headers, such as extremely minimalist ELF files in which the entry point and program header table lie within the ELF header,
 or binaries that have had the ELF header deliberately mangled as an anti-analysis method, such as crackmes or malware.
 Development was prompted by the failure of other tools to parse some of the ELF binaries in
 [Muppetlabs' "tiny" ELF file series](http://www.muppetlabs.com/~breadbox/software/tiny/). 
+
+When using Lepton to parse ELF binaries, one has access to every field in the ELF header as well as every field in every entry of the
+program load table. Individual fields can be straightforwardly modified to repair corruption.
 
 Lepton succeeds in cases where other parsers fail for two main reasons:
 
@@ -17,9 +20,7 @@ Lepton succeeds in cases where other parsers fail for two main reasons:
     and architecture of the data in the file is derived from the value in the `e_machine` field, which must be correct in order for the binary to be 
     loaded by the kernel.  
 
-When using Lepton to parse ELF binaries, one has access to every field in the ELF header as well as every field in every entry of the
-program load table. Individual fields can be straightforwardly modified. One can easily edit these fields and then create a new binary 
-containing the new field values. Example scripts and test binaries are included in the repository.
+Example scripts and test binaries are included in the repository.
 
 Currently, only x86 and x86-64 binaries are supported, but support for additional architectures can be added very easily by creating a new
 entry in the `architectures` dictionary in ELFStructures.py.
