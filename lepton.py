@@ -17,7 +17,6 @@ class ELFFile:
             print("Permission error: {0}".format(e))
             exit()
         try:
-            #self.ELF_header = self.ELFHeader(self.file_buffer).header
             self.ELF_header = self.ELFHeader(self.file_buffer, new_header)
         except ELFHeaderError as e:
             print("ELF header error: {0}".format(e))
@@ -58,9 +57,7 @@ class ELFFile:
             else:
                 return ELF_header_bytes + program_header_table_bytes + self.file_buffer[len(ELF_header_bytes) + len(program_header_table_bytes) : ]
 
-        # first 2 lines are incorrect because they check values in the new ELF header and program header table, not the original values in the file buffer
-        #if unpack(format, self.ELF_header.fields["e_phoff"])[0] < unpack('<H', self.ELF_header.fields["e_ehsize"])[0]: # program header table overlaps ELF header
-        #    entry_point_file_offset = unpack(self.ELF_header.fields["e_entry"])[0] - unpack(format, self.program_header_table.fields["p_vaddr"])[0] # original file offset
+        # rebuild
         segment = self.file_buffer[entry_point_file_offset:]
         new_entry_point_offset = unpack('<H', self.ELF_header.fields["e_ehsize"])[0] + len(program_header_table_bytes)
         new_entry_point = new_entry_point_offset + unpack(format, self.program_header_table.entries[0]["p_vaddr"])[0]
@@ -101,7 +98,6 @@ class ELFFile:
                 hdr["e_type"] = file_buffer[16:18]
                 hdr["e_machine"] = file_buffer[18:20]
                 hdr["e_entry"] = file_buffer[24:28]
-                #hdr["e_phoff"] = file_buffer[28:32]
                 hdr["e_phnum"] = file_buffer[44].to_bytes(2, byteorder="little")
                 return hdr
 
@@ -110,7 +106,6 @@ class ELFFile:
                 hdr["e_type"] = file_buffer[16:18]
                 hdr["e_machine"] = file_buffer[18:20]
                 hdr["e_entry"] = file_buffer[24:32]
-                #hdr["e_phoff"] = file_buffer[32:40]
                 hdr["e_phnum"] = file_buffer[56].to_bytes(2, byteorder="little")
                 return hdr
 
@@ -154,8 +149,8 @@ class ELFFile:
                     EI_DATA = b'\x02'
 
                 # these values are being manually inserted into the following fields in order
-                # to create a header that can be successfully parsed by readelf. As such, these
-                # values may not reflect the true values found in the original ELF header
+                # to create a header that can be successfully parsed by readelf or other tools.
+                #  As such, these values may not reflect the true values found in the original ELF header
                 if arch[1] == 1: # 32 bit
                     header = build_ELF32_hdr(file_buffer)
                     header["e_ident"] = b'\x7fELF\x01' + EI_DATA + padding
@@ -246,9 +241,7 @@ class ELFFile:
                 # calculate offset of p_hdr
                 # offset is e_phoff + e_phentsize * program header number
                 # first program header number is 0, then 1, then 2 ...
-                #table_offset = unpack('<I', ELF_header_fields["e_phoff"])[0]
                 table_offset = unpack('<I', file_buffer[28:32])[0]
-                #phdr_size = unpack('<H', ELF_header_fields["e_phentsize"])[0]
                 phdr_size = 32
 
                 if phdr_num == 0:
@@ -274,25 +267,22 @@ class ELFFile:
                 # calculate offset of p_hdr
                 # offset is e_phoff + e_phentsize * program header number
                 # first program header number is 0, then 1, then 2 ...
-                #table_offset = unpack('<Q', ELF_header_fields["e_phoff"])[0]
                 table_offset = unpack('Q', file_buffer[32:40])[0]
-                #phdr_size = unpack('<H', ELF_header_fields["e_phentsize"])[0]
                 phdr_size = 56
 
                 if phdr_num == 0:
                     phdr_offset = table_offset
                 else:
-                    phdr_offset = table_offset + phdr_size * phdr_num  # offset of phdr 0 == e_pho
-                #print("table_offset: %d\tphdr_size: %d\tphdr_offset: %d" % (table_offset, phdr_size, phdr_offset))
+                    phdr_offset = table_offset + phdr_size * phdr_num
 
                 # read data in file buffer at this offset to create program header
                 phdr = deepcopy(ELF64_program_header)
                 phdr["p_type"] = file_buffer[phdr_offset : phdr_offset + 4]         # 4
-                phdr["p_flags"] = file_buffer[phdr_offset + 4 : phdr_offset + 8]   # 4
-                phdr["p_offset"] = file_buffer[phdr_offset + 8 : phdr_offset + 16]   # 8
+                phdr["p_flags"] = file_buffer[phdr_offset + 4 : phdr_offset + 8]    # 4
+                phdr["p_offset"] = file_buffer[phdr_offset + 8 : phdr_offset + 16]  # 8
                 phdr["p_vaddr"] = file_buffer[phdr_offset + 16: phdr_offset + 24]   # 8
-                phdr["p_paddr"] = file_buffer[phdr_offset + 24 : phdr_offset + 32] # 8
-                phdr["p_filesz"] = file_buffer[phdr_offset + 32 : phdr_offset + 40]  # 8
+                phdr["p_paddr"] = file_buffer[phdr_offset + 24 : phdr_offset + 32]  # 8
+                phdr["p_filesz"] = file_buffer[phdr_offset + 32 : phdr_offset + 40] # 8
                 phdr["p_memsz"] = file_buffer[phdr_offset + 40 : phdr_offset + 48]  # 8
                 phdr["p_align"] = file_buffer[phdr_offset + 48 : phdr_offset + 56]  # 8
 
@@ -304,7 +294,6 @@ class ELFFile:
             def build_program_header_table(file_buffer, ELF_header_fields):
                 phdr_table = []
                 phnum = unpack("<h", ELF_header_fields["e_phnum"])[0]
-                #arch = unpack("<B", ELF_header_fields["e_ident"][4])[0]
                 arch = ELF_header_fields["e_ident"][4]
 
                 for phdr_num in range(phnum):
@@ -321,7 +310,6 @@ class ELFFile:
 
 
         def to_bytes(self):
-            #phdr_table_bytes = []
             phdr_table_bytes = bytes()
             if len(self.entries[0]["p_vaddr"]) == 8:
                 for header in self.entries:
@@ -344,6 +332,5 @@ class ELFFile:
                                    header["p_memsz"] + \
                                    header["p_flags"] + \
                                    header["p_align"]
-                    #phdr_table_bytes.append(header_bytes)
                     phdr_table_bytes += header_bytes
             return phdr_table_bytes
