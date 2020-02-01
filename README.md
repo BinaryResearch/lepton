@@ -100,6 +100,7 @@ Ghidra now successfully imports the binary and displays the new ELF header value
 
 ![Ghidra loads the binary after the ELF header is repaired](https://imgur.com/hKFWf96.png)
 
+<hr>
 
 ### Recomposing a Corrupted Binary 
 
