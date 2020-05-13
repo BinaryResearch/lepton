@@ -27,6 +27,8 @@ entry in the `architectures` dictionary in ELFStructures.py.
 
 # Usage
 
+A detailed example can be found at [Analyzing ELF Binaries with Malformed Headers Part 3 - Automatically Solving a Corrupted Keygenme with angr](https://binaryresearch.github.io/2020/01/15/Analyzing-ELF-Binaries-with-Malformed-Headers-Part-3-Solving-A-Corrupted-Keygenme.html)
+
 Example use cases:
 
 ### Editing Corrupted ELF Header Fields
