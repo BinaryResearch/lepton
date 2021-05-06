@@ -6,7 +6,7 @@ from sys import argv
 
 def main():
     if len(argv) != 2:
-        print("usage: build_new_binary.py <FILE NAME>")
+        print("usage: print_ELF_header.py <FILE NAME>")
         exit()
 
     print("raw header:")
