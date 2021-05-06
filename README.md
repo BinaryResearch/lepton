@@ -75,7 +75,7 @@ all fields having to do with sections are zeroed out:
 ```python
 #!/usr/bin/python3
 
-from Lepton import *
+from lepton import *
 from struct import pack
 
 def main():
