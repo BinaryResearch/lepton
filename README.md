@@ -106,6 +106,8 @@ Ghidra now successfully imports the binary and displays the new ELF header value
 
 ### Recomposing a Corrupted Binary 
 
+Edit 5/6/2021: This fails in most cases because it breaks most, if not all, offsets and relocations in the code.
+
 `readelf` completely fails to read `tiny-i386`, which is 45 bytes in size - smaller than the 52 bytes of a well-formed ELF32 header:
 
 ```shell
