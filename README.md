@@ -1,7 +1,9 @@
 # Overview
 Lepton is a Lightweight ELF Parsing Tool that was designed specifically for analyzing and editing binaries with damaged or corrupted
-ELF headers, such as extremely minimalist ELF files in which the entry point and program header table lie within the ELF header,
-or binaries that have had the ELF header deliberately mangled as an anti-analysis method, such as crackmes or malware.
+ELF headers, such as:
+ - extremely minimalist ELF files in which the entry point and program header table lie within the ELF header
+ - binaries that have had the ELF header deliberately mangled as an anti-analysis method (crackmes or malware)
+
 Development was prompted by the failure of other tools to parse some of the ELF binaries in
 [Muppetlabs' "tiny" ELF file series](http://www.muppetlabs.com/~breadbox/software/tiny/). 
 
@@ -104,9 +106,9 @@ Ghidra now successfully imports the binary and displays the new ELF header value
 
 <hr>
 
-### Recomposing a Corrupted Binary 
+### Recomposing a Corrupted Binary (experimental - failure)
 
-Edit 5/6/2021: This fails in most cases because it breaks most, if not all, offsets and relocations in the code.
+**Edit 5/6/2021: This fails in most cases because it breaks most, if not all, code offsets and relocations.**
 
 `readelf` completely fails to read `tiny-i386`, which is 45 bytes in size - smaller than the 52 bytes of a well-formed ELF32 header:
 
@@ -254,10 +256,6 @@ The test binaries included in this repo are from Muppetlabs' "tiny" series, as w
 
 
 ### TODO
- - The binary recomposition feature is experimental. It appears to work for the very simple, very small binaries,
-but modifies the behavior or corrupts the logic of larger or more complex programs. Further investigation is
-required.
-
  - The ELFExceptions module needs work as it is very basic.
 
  - The Lepton classes and functions need to be documented
